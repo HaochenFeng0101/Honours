@@ -1,9 +1,11 @@
 import csv
 import matplotlib.pyplot as plt
 
-imu_csv_file = '/home/fhc/ANU/2023 S1/honours/camera_calibration/imu_plot/data.csv'
-ros_csv_file = '/home/fhc/ANU/2023 S1/honours/camera_calibration/imu_plot/imu_ros.csv'
+# imu_csv_file = '/home/fhc/ANU/2023 S1/honours/camera_calibration/imu_plot/data.csv'
+# ros_csv_file = '/home/fhc/ANU/2023 S1/honours/camera_calibration/imu_plot/imu_ros.csv'
 
+imu_csv_file = "/home/haochen/haochen-honors/Honours/imu_plot/data.csv"
+ros_csv_file = "/home/haochen/haochen-honors/Honours/imu_plot/imu_ros.csv"
 '''
 firstly steady at 20s, pull out to certain position, up and down twice, horizontal move then push back
 '''

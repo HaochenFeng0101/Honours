@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-imu_csv_file = '/home/fhc/ANU/2023 S1/honours/camera_calibration/imu_output_allan_dev/imu_data.csv'
+# imu_csv_file = '/home/fhc/ANU/2023 S1/honours/camera_calibration/imu_output_allan_dev/imu_data.csv'
+imu_csv_file = "/home/haochen/haochen-honors/Honours/imu_output_allan_dev/imu_data.csv"
 
 def read_imu_csv(filename):
     df = pd.read_csv(filename, header=1, names=['timestamp', 'gyro_x', 'gyro_y', 'gyro_z', 'accel_x', 'accel_y', 'accel_z'])
