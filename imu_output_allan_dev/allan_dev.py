@@ -37,6 +37,8 @@ def find_random_walk_and_bias_instability(taus, adevs):
     bias_instability_index = indices_in_range[np.argmin(np.abs(local_slope[indices_in_range]))]
     bias_instability = adevs[bias_instability_index] #/0.664
     
+    
+    ###read on how to find allen's dev###
         
     return random_walk, bias_instability, random_walk_index, bias_instability_index
 
