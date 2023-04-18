@@ -4,9 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# imu_csv_file = '/home/fhc/ANU/2023 S1/honours/camera_calibration/imu_output_allan_dev/imu_data.csv'
 imu_csv_file = "/home/haochen/Honours/imu_allan_ros"
-
 T265_imu_csv_file = '/home/haochen/Honours/allan_Dev_T265/mav0/imu0/data.csv'
 
 def read_imu_csv(filename):
@@ -17,44 +15,37 @@ def read_imu_csv(filename):
     return timestamps, gyro_data, accel_data
 
 def compute_allan_deviation(data, taus):
-    taus, adevs, _, _ = allantools.adev(data, rate=200, data_type="freq", taus=taus) #frequency is 200hz from datasheet 
+    taus, adevs, _, _ = allantools.adev(data, rate=200, data_type="freq", taus=taus)
     return taus, adevs
 
-def find_N_at_tau_1(ax, labels, data, taus, linestyle='-'):
+def find_N_at_tau_1(ax, labels, data, taus, unit, linestyle='-'):
     for axis in range(3):
         taus, adevs = compute_allan_deviation(data[:, axis], taus)
-        # ax.plot(taus, adevs, linestyle, label=f"{labels[axis]}")
 
-        # Find the intersection with tau=1
         tau_1_index = np.argmin(np.abs(taus - 1))
         adev_at_tau_1 = adevs[tau_1_index]
 
-        # Calculate N using the Allan Variance equation
         N = np.sqrt(adev_at_tau_1 * taus[tau_1_index])
 
-        print(f"{labels[axis]} Angle Random Walk Coefficient (N) at Tau=1: {N:.2e} (rad/s)/sqrt(Hz)")
+        print(f"{labels[axis]} Angle Random Walk Coefficient (N) at Tau=1: {N:.2e} {unit}")
 
     ax.legend()
-def find_bias_instability(ax, labels, data, taus, linestyle='-'):
+
+def find_bias_instability(ax, labels, data, taus, unit, linestyle='-'):
     scaling_factor = np.sqrt(2 * np.log(2) / np.pi)
     
     for axis in range(3):
         taus, adevs = compute_allan_deviation(data[:, axis], taus)
-        # ax.plot(taus, adevs, linestyle, label=f"{labels[axis]}")
 
-        # Find the minimum value of Allan deviation
         min_adev = np.min(adevs)
 
-        # Calculate B using the scaling factor
         B = min_adev / scaling_factor
 
-        print(f"{labels[axis]} Bias Instability Coefficient (B): {B:.2e} rad/s")
+        print(f"{labels[axis]} Bias Instability Coefficient (B): {B:.2e} {unit}")
 
     ax.legend()
 
-
-
-def plot_allan_deviation(ax, title, labels, data, taus, linestyle='-'):
+def plot_allan_deviation(ax, title, labels, data, taus, unit, linestyle='-'):
     ax.set_title(title)
     ax.set_xscale('log')
     ax.set_yscale('log')
@@ -63,13 +54,13 @@ def plot_allan_deviation(ax, title, labels, data, taus, linestyle='-'):
     ax.grid(which='both')
 
     plot_data_on_axis(ax, labels, data, taus, linestyle)
-    find_N_at_tau_1(ax, labels, data, taus, linestyle)
-    find_bias_instability(ax,labels,data,taus,linestyle)
+    find_N_at_tau_1(ax, labels, data, taus, unit, linestyle)
+    find_bias_instability(ax, labels, data, taus, unit, linestyle)
+    
 def plot_data_on_axis(ax, labels, data, taus, linestyle='-'):
     for axis in range(3):
         taus, adevs = compute_allan_deviation(data[:, axis], taus)
         ax.plot(taus, adevs, linestyle, label=f"{labels[axis]}")
-        
         
     ax.legend()
 
@@ -83,12 +74,12 @@ def main(args):
     labels_gyro = ['Gyro X', 'Gyro Y', 'Gyro Z']
 
     print("ROS IMU:")
-    plot_allan_deviation(axs[0, 0], 'Allan Deviation - Accelerometer (ROS)', labels_accel, accel_data1, taus)
-    plot_allan_deviation(axs[0, 1], 'Allan Deviation - Gyroscope (ROS)', labels_gyro, gyro_data1, taus)
+    plot_allan_deviation(axs[0, 0], 'Allan Deviation - Accelerometer (ROS)', labels_accel, accel_data1, taus, 'm/s²/sqrt(Hz)', '-')
+    plot_allan_deviation(axs[0, 1], 'Allan Deviation - Gyroscope (ROS)', labels_gyro, gyro_data1, taus, 'rad/s/sqrt(Hz)', '-')
     
     print("T265 IMU:")
-    plot_allan_deviation(axs[1, 0], 'Allan Deviation - Accelerometer (T265)', labels_accel, accel_data2, taus)
-    plot_allan_deviation(axs[1, 1], 'Allan Deviation - Gyroscope (T265)', labels_gyro, gyro_data2, taus)
+    plot_allan_deviation(axs[1, 0], 'Allan Deviation - Accelerometer (T265)', labels_accel, accel_data2, taus, 'm/s²/sqrt(Hz)', '-')
+    plot_allan_deviation(axs[1, 1], 'Allan Deviation - Gyroscope (T265)', labels_gyro, gyro_data2, taus, 'rad/s/sqrt(Hz)', '-')
 
     plt.show()
 
