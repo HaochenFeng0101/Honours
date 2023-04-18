@@ -10,8 +10,8 @@ import shutil
 
 
 # Create a folder for the output data
-output_folder = 'euroc_output'
-
+# output_folder = 'euroc_output'
+output_folder = 'allan_Dev_T265'
 # Function to delete the contents of a folder
 def delete_folder_contents(folder):
     for file in os.listdir(folder):
@@ -22,9 +22,9 @@ def delete_folder_contents(folder):
             shutil.rmtree(file_path)
 
 # Delete the contents of the output folders
-delete_folder_contents(os.path.join(output_folder, 'mav0', 'cam0', 'data'))
-delete_folder_contents(os.path.join(output_folder, 'mav0', 'cam1', 'data'))
-delete_folder_contents(os.path.join(output_folder, 'mav0', 'imu0', 'data'))
+# delete_folder_contents(os.path.join(output_folder, 'mav0', 'cam0', 'data'))
+# delete_folder_contents(os.path.join(output_folder, 'mav0', 'cam1', 'data'))
+# delete_folder_contents(os.path.join(output_folder, 'mav0', 'imu0', 'data'))
 
 os.makedirs(output_folder, exist_ok=True)
 os.makedirs(os.path.join(output_folder, 'mav0', 'cam0', 'data'), exist_ok=True)
@@ -62,8 +62,9 @@ with open(os.path.join(output_folder, 'mav0', 'cam0', 'data.csv'), 'w', newline=
     profile = pipeline.start(config)
 
     # Configure the recording duration (in seconds)
-    record_duration = 60
+    record_duration = 60*30
     start_time = time.time()
+    print("recording start!")
 
     try:
         while time.time() - start_time < record_duration:
