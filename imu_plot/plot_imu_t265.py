@@ -39,47 +39,89 @@ def read_imu_csv(filename):
 fisheye_timestamps, fisheye_gyro_data, fisheye_accel_data = read_imu_csv(imu_csv_file)
 ros_timestamps, ros_gyro_data, ros_accel_data = read_imu_csv(ros_csv_file)
 
-# Plot gyroscope data for fisheye
-plt.figure()
-plt.plot(fisheye_timestamps, fisheye_gyro_data[0], label='Fisheye Gyro X')
-plt.plot(fisheye_timestamps, fisheye_gyro_data[1], label='Fisheye Gyro Y')
-plt.plot(fisheye_timestamps, fisheye_gyro_data[2], label='Fisheye Gyro Z')
-plt.xlabel('Time (s)')
-plt.ylabel('Gyroscope (rad/s)')
-plt.title('IMU Gyroscope Data-T265_imu')
-plt.legend()
-plt.grid()
+# Create subplots with shared x and y axes
+# Plot gyroscope data
+fig1, ax1 = plt.subplots(3, 1, figsize=(10, 15), sharex=True)
 
-#Plot gyroscope data for ros
-plt.figure()
-plt.plot(ros_timestamps, ros_gyro_data[0], label='ROS Gyro X')
-plt.plot(ros_timestamps, ros_gyro_data[1], label='ROS Gyro Y')
-plt.plot(ros_timestamps, ros_gyro_data[2], label='ROS Gyro Z')
-plt.xlabel('Time (s)')
-plt.ylabel('Gyroscope (rad/s)')
-plt.title('IMU Gyroscope Data-ros')
-plt.legend()
-plt.grid()
+for i in range(3):
+    ax1[i].plot(fisheye_timestamps, fisheye_gyro_data[i], label=f'T265 Gyro {["X", "Y", "Z"][i]}')
+    ax1[i].plot(ros_timestamps, ros_gyro_data[i], label=f'IMU Gyro {["X", "Y", "Z"][i]}')
+    ax1[i].set_title(f'Gyroscope {["X", "Y", "Z"][i]} Axis')
+    ax1[i].legend()
+    ax1[i].grid()
 
-# Plot accelerometer data for both datasets
-plt.figure()
-plt.plot(fisheye_timestamps, fisheye_accel_data[0], label='Fisheye Accel X')
-plt.plot(fisheye_timestamps, fisheye_accel_data[1], label='Fisheye Accel Y')
-plt.plot(fisheye_timestamps, fisheye_accel_data[2], label='Fisheye Accel Z')
-plt.xlabel('Time (s)')
-plt.ylabel('Accelerometer (m/s²)')
-plt.title('IMU Accelerometer Data-T265_imu')
-plt.legend()
-plt.grid()
+ax1[0].set(ylabel='Gyroscope (rad/s)')
+ax1[1].set(ylabel='Gyroscope (rad/s)')
+ax1[2].set(ylabel='Gyroscope (rad/s)')
+for ax in ax1.flat:
+    ax.set(xlabel='Time (s)')
 
-plt.figure()
-plt.plot(ros_timestamps, ros_accel_data[0], label='ROS Accel X')
-plt.plot(ros_timestamps, ros_accel_data[1], label='ROS Accel Y')
-plt.plot(ros_timestamps, ros_accel_data[2], label='ROS Accel Z')
-plt.xlabel('Time (s)')
-plt.ylabel('Accelerometer (m/s²)')
-plt.title('IMU Accelerometer Data-ros')
-plt.legend()
-plt.grid()
+# Plot accelerometer data
+fig2, ax2 = plt.subplots(3, 1, figsize=(10, 15), sharex=True)
 
+for i in range(3):
+    ax2[i].plot(fisheye_timestamps, fisheye_accel_data[i], label=f'T265 Accel {["X", "Y", "Z"][i]}')
+    ax2[i].plot(ros_timestamps, ros_accel_data[i], label=f'IMU Accel {["X", "Y", "Z"][i]}')
+    ax2[i].set_title(f'Accelerometer {["X", "Y", "Z"][i]} Axis')
+    ax2[i].legend()
+    ax2[i].grid()
+
+ax2[0].set(ylabel='Accelerometer (m/s²)')
+ax2[1].set(ylabel='Accelerometer (m/s²)')
+ax2[2].set(ylabel='Accelerometer (m/s²)')
+for ax in ax2.flat:
+    ax.set(xlabel='Time (s)')
+
+# # Show the plots
+# plt.show()
+
+# Plot gyroscope data
+fig1, (ax1_1, ax1_2) = plt.subplots(1, 2, figsize=(15, 5), sharex=True)
+
+# T265 Gyroscope data
+ax1_1.plot(fisheye_timestamps, fisheye_gyro_data[0], label='T265 Gyro X')
+ax1_1.plot(fisheye_timestamps, fisheye_gyro_data[1], label='T265 Gyro Y')
+ax1_1.plot(fisheye_timestamps, fisheye_gyro_data[2], label='T265 Gyro Z')
+ax1_1.set_title('T265 IMU Gyroscope Data')
+ax1_1.legend()
+ax1_1.grid()
+
+# ROS Gyroscope data
+ax1_2.plot(ros_timestamps, ros_gyro_data[0], label='IMU Gyro X')
+ax1_2.plot(ros_timestamps, ros_gyro_data[1], label='IMU Gyro Y')
+ax1_2.plot(ros_timestamps, ros_gyro_data[2], label='IMU Gyro Z')
+ax1_2.set_title('ROS IMU Gyroscope Data')
+ax1_2.legend()
+ax1_2.grid()
+
+ax1_1.set(ylabel='Gyroscope (rad/s)')
+
+for ax in (ax1_1, ax1_2):
+    ax.set(xlabel='Time (s)')
+    
+# Plot accelerometer data
+fig2, (ax2_1, ax2_2) = plt.subplots(1, 2, figsize=(15, 5), sharex=True)
+
+# T265 Accelerometer data
+ax2_1.plot(fisheye_timestamps, fisheye_accel_data[0], label='T265 Accel X')
+ax2_1.plot(fisheye_timestamps, fisheye_accel_data[1], label='T265 Accel Y')
+ax2_1.plot(fisheye_timestamps, fisheye_accel_data[2], label='T265 Accel Z')
+ax2_1.set_title('T265 IMU Accelerometer Data')
+ax2_1.legend()
+ax2_1.grid()
+
+# ROS Accelerometer data
+ax2_2.plot(ros_timestamps, ros_accel_data[0], label='IMU Accel X')
+ax2_2.plot(ros_timestamps, ros_accel_data[1], label='IMU Accel Y')
+ax2_2.plot(ros_timestamps, ros_accel_data[2], label='IMU Accel Z')
+ax2_2.set_title('ROS IMU Accelerometer Data')
+ax2_2.legend()
+ax2_2.grid()
+
+ax2_1.set(ylabel='Accelerometer (m/s²)')
+
+for ax in (ax2_1, ax2_2):
+    ax.set(xlabel='Time (s)')
+
+# Show the plots
 plt.show()
