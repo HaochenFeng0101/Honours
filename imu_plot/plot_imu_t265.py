@@ -43,9 +43,14 @@ ros_timestamps, ros_gyro_data, ros_accel_data = read_imu_csv(ros_csv_file)
 # Plot gyroscope data
 fig1, ax1 = plt.subplots(3, 1, figsize=(10, 15), sharex=True)
 
+# Shift the ROS IMU data by a fixed time offset (in seconds)
+time_offset = 3.2  # Adjust this value based on the actual time difference
+ros_timestamps = [t + time_offset for t in ros_timestamps]
+
+
 for i in range(3):
     ax1[i].plot(fisheye_timestamps, fisheye_gyro_data[i], label=f'T265 Gyro {["X", "Y", "Z"][i]}')
-    ax1[i].plot(ros_timestamps, ros_gyro_data[i], label=f'IMU Gyro {["X", "Y", "Z"][i]}')
+    ax1[i].plot(ros_timestamps, ros_gyro_data[i], label=f'car Gyro {["X", "Y", "Z"][i]}')
     ax1[i].set_title(f'Gyroscope {["X", "Y", "Z"][i]} Axis')
     ax1[i].legend()
     ax1[i].grid()
@@ -61,7 +66,7 @@ fig2, ax2 = plt.subplots(3, 1, figsize=(10, 15), sharex=True)
 
 for i in range(3):
     ax2[i].plot(fisheye_timestamps, fisheye_accel_data[i], label=f'T265 Accel {["X", "Y", "Z"][i]}')
-    ax2[i].plot(ros_timestamps, ros_accel_data[i], label=f'IMU Accel {["X", "Y", "Z"][i]}')
+    ax2[i].plot(ros_timestamps, ros_accel_data[i], label=f'car Accel {["X", "Y", "Z"][i]}')
     ax2[i].set_title(f'Accelerometer {["X", "Y", "Z"][i]} Axis')
     ax2[i].legend()
     ax2[i].grid()
@@ -87,9 +92,9 @@ ax1_1.legend()
 ax1_1.grid()
 
 # ROS Gyroscope data
-ax1_2.plot(ros_timestamps, ros_gyro_data[0], label='IMU Gyro X')
-ax1_2.plot(ros_timestamps, ros_gyro_data[1], label='IMU Gyro Y')
-ax1_2.plot(ros_timestamps, ros_gyro_data[2], label='IMU Gyro Z')
+ax1_2.plot(ros_timestamps, ros_gyro_data[0], label='car Gyro X')
+ax1_2.plot(ros_timestamps, ros_gyro_data[1], label='car Gyro Y')
+ax1_2.plot(ros_timestamps, ros_gyro_data[2], label='car Gyro Z')
 ax1_2.set_title('ROS IMU Gyroscope Data')
 ax1_2.legend()
 ax1_2.grid()
@@ -111,9 +116,9 @@ ax2_1.legend()
 ax2_1.grid()
 
 # ROS Accelerometer data
-ax2_2.plot(ros_timestamps, ros_accel_data[0], label='IMU Accel X')
-ax2_2.plot(ros_timestamps, ros_accel_data[1], label='IMU Accel Y')
-ax2_2.plot(ros_timestamps, ros_accel_data[2], label='IMU Accel Z')
+ax2_2.plot(ros_timestamps, ros_accel_data[0], label='car Accel X')
+ax2_2.plot(ros_timestamps, ros_accel_data[1], label='car Accel Y')
+ax2_2.plot(ros_timestamps, ros_accel_data[2], label='car Accel Z')
 ax2_2.set_title('ROS IMU Accelerometer Data')
 ax2_2.legend()
 ax2_2.grid()
